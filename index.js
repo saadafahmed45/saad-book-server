@@ -11,7 +11,8 @@ app.use(express.json());
 // pass : bFLG1mqlCa4e02su;
 
 // mongoDb import
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+
 const uri =
   "mongodb+srv://saadBookDb:bFLG1mqlCa4e02su@cluster0.58zpnyp.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -48,6 +49,48 @@ async function run() {
       const cusor = userCollection.find();
       const result = await cusor.toArray();
       res.send(result);
+    });
+
+    // get single data
+
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.findOne(query);
+      res.send(result);
+    });
+    // Delete the first document in  collection
+
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log("delete id ", id);
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // update
+
+    app.put("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const users = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true };
+      const updateUsers = {
+        $set: {
+          name: users.name,
+          email: users.email,
+          age: users.age,
+          number: users.number,
+        },
+      };
+      const result = await userCollection.updateOne(
+        filter,
+        updateUsers,
+        option
+      );
+      res.send(result);
+      console.log(result);
     });
 
     // Send a ping to confirm a successful connection
