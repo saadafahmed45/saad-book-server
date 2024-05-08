@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
+require("dotenv").config();
 const port = 7000;
 // middelware
 app.use(cors());
@@ -10,6 +10,9 @@ app.use(express.json());
 // Db Name : saadBookDb
 // pass : bFLG1mqlCa4e02su;
 
+const dbUserName = process.env.DB_USER;
+const dbPassword = process.env.DB_PASS;
+console.log(dbUserName, dbPassword);
 // mongoDb import
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
