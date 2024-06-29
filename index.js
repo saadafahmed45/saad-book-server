@@ -34,6 +34,7 @@ async function run() {
     await client.connect();
     const database = client.db("bookUserDb");
     const userCollection = database.collection("users");
+    const AdminCollection = database.collection("Admin");
 
     // here all crud oparation
 
@@ -44,6 +45,8 @@ async function run() {
       res.send(result);
       console.log(result);
     });
+
+    //
 
     // get  all data
     app.get("/users", async (req, res) => {
@@ -93,6 +96,23 @@ async function run() {
       );
       res.send(result);
       console.log(result);
+    });
+
+    //  user role api
+
+    // post user role
+    app.post("/users/admin", async (req, res) => {
+      const user = req.body;
+      const result = await AdminCollection.insertOne(user);
+      res.send(result);
+      console.log(result);
+    });
+    // get  user role
+    app.get("/users/admin", async (req, res) => {
+      // res.send(users);
+      const cusor = AdminCollection.find();
+      const result = await cusor.toArray(); 
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection
